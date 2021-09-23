@@ -101,7 +101,8 @@ export class AutoMarkdownToc {
         headerList.forEach(header => {
 
             if (header.range.start.line !== 0 && !document.lineAt(header.range.start.line - 1).isEmptyOrWhitespace) {
-                editBuilder.insert(new Position(header.range.start.line, 0), this.configManager.options.lineEnding);
+                // editBuilder.insert(new Position(header.range.start.line, 0), this.configManager.options.lineEnding);
+                editBuilder.insert(new Position(header.range.start.line, 0), '');
             }
 
             if (this.configManager.options.ORDERED_LIST.value) {
@@ -195,18 +196,19 @@ export class AutoMarkdownToc {
      * @param header
      */
     private insertAnchor(editBuilder: TextEditorEdit, header: Header) {
-        let anchorMatches = header.tocRowWithAnchor(header.tocWithoutOrder).match(RegexStrings.Instance.REGEXP_ANCHOR);
+        let anchorMatches = header.tocRowWithAnchor(this.getTocString(header)).match(RegexStrings.Instance.REGEXP_ANCHOR);
         if (anchorMatches !== null) {
             // let name = anchorMatches[1];
             let text = [
-                this.configManager.options.lineEnding,
                 '<a id="',
                 header.anchor.id,
                 '" name="',
                 header.anchor.name,
-                '"></a>'];
+                '"></a>',
+                this.configManager.options.lineEnding];
 
-            let insertPosition = new Position(header.range.end.line, header.range.end.character);
+            // let insertPosition = new Position(header.range.end.line, header.range.end.character);
+            let insertPosition = new Position(header.range.start.line, 0);
 
             if (this.configManager.options.ANCHOR_MODE.value === AnchorMode.bitbucket) {
                 text = text.slice(1);

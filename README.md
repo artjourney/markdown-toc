@@ -7,6 +7,28 @@ Generate TOC (table of contents) of headlines from parsed [markdown](https://en.
 [![Rating](https://vsmarketplacebadge.apphb.com/rating/huntertran.auto-markdown-toc.svg)](https://marketplace.visualstudio.com/items?itemName=huntertran.auto-markdown-toc)
 [![Node CI](https://github.com/huntertran/markdown-toc/workflows/Node%20CI/badge.svg)](https://github.com/huntertran/markdown-toc/actions)
 
+---
+Changes:
+1. Add header number sections for link anchor to avoid generate same link name.
+2. Add tsconfig.json.
+3. Copy and modify [anchor-markdown-header.js](https://github.com/thlorenz/anchor-markdown-header). Change the return value with link href. Revome the charater('%') after encodeURI to avoid the invalid anchor with CJK charater. Convert the js file to ts file.
+4. Insert anchor before the sections.
+
+---
+Compile and package:
+```
+npm i -g typescript
+npm i -g vsce
+
+cd markdown-toc-master
+
+npm install
+npm install @types/emoji-regex
+vsce package
+```
+
+---
+
 <!-- TOC -->
 
 - [1. Features](#1-features)

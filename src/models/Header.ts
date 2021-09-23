@@ -4,6 +4,8 @@ import {
 import { AnchorMode } from './AnchorMode';
 import { Anchor } from './Anchor';
 import { RegexStrings } from './RegexStrings';
+import { AnchorMarkdownHeader } from '../AnchorMarkdownHeader';
+import internal = require('stream');
 
 export class Header {
     headerMark: string = "";
@@ -35,7 +37,6 @@ export class Header {
         }
 
         this.range = new Range(symbol.range.start, new Position(symbol.range.start.line, symbol.name.length));
-        this.anchor = new Anchor(this.cleanUpTitle(this.dirtyTitle));
     }
 
     public get depth(): number {
@@ -48,8 +49,14 @@ export class Header {
 
     public tocRowWithAnchor(tocString: string): string {
         let title = this.cleanUpTitle(tocString);
-        let anchor_markdown_header = require('anchor-markdown-header');
-        return anchor_markdown_header(title, this.anchorMode);
+        let href = this.getAnchorId(title);
+        return '[' + title + '](#' + href + ')';
+    }
+
+    public getAnchorId(tocString: string): string {
+        let title = this.cleanUpTitle(tocString);
+        let href = AnchorMarkdownHeader.anchorMarkdownHeader(title, this.anchorMode, 0, '');
+        return href;
     }
 
     public get tocWithoutOrder(): string {

@@ -2,6 +2,7 @@ import { Header } from "./models/Header";
 import { ConfigManager } from "./ConfigManager";
 import { window, DocumentSymbol, commands, Uri, TextEditor } from "vscode";
 import { RegexStrings } from "./models/RegexStrings";
+import { Anchor } from "./models/Anchor";
 
 
 export class HeaderManager {
@@ -46,9 +47,12 @@ export class HeaderManager {
                 header.orderArray = this.calculateHeaderOrder(header, headerList);
                 header.orderedListString = header.orderArray.join('.') + ".";
 
+                header.anchor = new Anchor(header.getAnchorId(header.tocWithOrder));
+
                 if (header.depth <= this.configManager.options.DEPTH_TO.value) {
                     headerList.push(header);
                     this.addHeaderChildren(symbols[index], headerList, editor);
+
                 }
             }
 
@@ -103,6 +107,7 @@ export class HeaderManager {
     }
 
     private addHeaderChildren(symbol: DocumentSymbol, headerList: Header[], editor: TextEditor) {
+
         if (symbol.children.length > 0) {
             for (let index = 0; index < symbol.children.length; index++) {
 
@@ -115,9 +120,12 @@ export class HeaderManager {
                 header.orderArray = this.calculateHeaderOrder(header, headerList);
                 header.orderedListString = header.orderArray.join('.') + ".";
 
+                header.anchor = new Anchor(header.getAnchorId(header.tocWithOrder));
+
                 if (header.depth <= this.configManager.options.DEPTH_TO.value) {
                     headerList.push(header);
                     this.addHeaderChildren(symbol.children[index], headerList, editor);
+
                 }
             }
         }
